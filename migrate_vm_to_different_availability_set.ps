@@ -1,0 +1,86 @@
+##################################
+# !! Translate to Bash Script !! #
+##################################
+#
+# Script to change Availability Set of a Azure VM
+# Azure VM has to be recreated, so first configuration is read, then new VM is created
+# 
+# Configuration
+
+    $resourceGroup = "Test-EU-MIP-RG"
+    $vmName = "minion-x"
+    $newAvailSetName = "myNewAvailabilitySet"
+
+# Get the details of the VM to be moved to the Availability Set
+    $originalVM = Get-AzVM `
+	   -ResourceGroupName $resourceGroup `
+	   -Name $vmName
+
+# Create new availability set if it does not exist
+    $availSet = Get-AzAvailabilitySet `
+	   -ResourceGroupName $resourceGroup `
+	   -Name $newAvailSetName `
+	   -ErrorAction Ignore
+    if (-Not $availSet) {
+    $availSet = New-AzAvailabilitySet `
+	   -Location $originalVM.Location `
+	   -Name $newAvailSetName `
+	   -ResourceGroupName $resourceGroup `
+	   -PlatformFaultDomainCount 3 `
+	   -PlatformUpdateDomainCount 10 `
+	   -Sku Aligned
+    }
+    
+# Remove the original VM
+    Remove-AzVM -ResourceGroupName $resourceGroup -Name $vmName    
+
+# Create the basic configuration for the replacement VM
+    $newVM = New-AzVMConfig `
+	   -VMName $originalVM.Name `
+	   -VMSize $originalVM.HardwareProfile.VmSize `
+	   -AvailabilitySetId $availSet.Id
+  
+    $newVM = Set-AzVMOSDisk `
+	   -VM $newVM -CreateOption Attach `
+	   -ManagedDiskId $originalVM.StorageProfile.OsDisk.ManagedDisk.Id `
+	   -Name $originalVM.StorageProfile.OsDisk.Name `
+	   -VhdUri "os.vhd" 
+	   -Caching ReadWrite
+
+	$newVM = Set-AzVMOperatingSystem -VM $newVM -Linux -ComputerName $originalVM.Name ???? -Credential (Get-Credential) ???
+
+# Add Data Disks
+    foreach ($disk in $originalVM.StorageProfile.DataDisks) 
+	{ 
+		$newVM = Add-AzVMDataDisk -VM $newVM `
+		   -Name $disk.Name `
+		   -ManagedDiskId $disk.ManagedDisk.Id `
+		   -Caching $disk.Caching `
+		   -Lun $disk.Lun `
+		   -DiskSizeInGB $disk.DiskSizeGB `
+		   -CreateOption Attach
+	}
+    
+# Add NIC(s) and keep the same NIC as primary
+	foreach ($nic in $originalVM.NetworkProfile.NetworkInterfaces) 
+	{	
+		if ($nic.Primary -eq "True") 
+		{
+    		$newVM = Add-AzVMNetworkInterface `
+       			-VM $newVM `
+       			-Id $nic.Id -Primary
+       	}
+       	else 
+		{
+       		$newVM = Add-AzVMNetworkInterface `
+      			-VM $newVM `
+      	 		-Id $nic.Id 
+		}
+	}
+
+# Recreate the VM
+    New-AzVM `
+	   -ResourceGroupName $resourceGroup `
+	   -Location $originalVM.Location `
+	   -VM $newVM `
+	   -DisableBginfoExtension
