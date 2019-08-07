@@ -16,7 +16,7 @@ logger = logging.getLogger('ScheduledEvents')
 logging.basicConfig(format=log_format, level=logging.DEBUG)
 
 # define structure of .config file
-# agentSection = 'AGENT'
+agentSection = 'AGENT'
 eventGridSection= 'EVENT-GRID'
 
 def main():
@@ -25,7 +25,7 @@ def main():
     # load config file
     try: 
         config = configparser.ConfigParser()
-        config.read('scheduledEventsExtension.config')
+        config.read('scheduledEvents.config')
     except:
         logger.error ("Failed to load configuration")
 

@@ -6,10 +6,10 @@
 #
 #install necessary libraries
 apt-get install python3-pip libssl-dev libffi-dev python-dev build-essential -y
-pip3 install proxy.py
-pip3 install azure-mgmt
-pip3 install azure-eventgrid
-pip3 install azure-mgmt-eventgrid
+pip install proxy.py
+pip install azure-mgmt
+pip install azure-eventgrid
+pip install azure-mgmt-eventgrid
 
 #write Event Grid Topic and Key to config file from parameters
 sed -i "s@<myEventTopic>@$1@g" ./scheduledEvents.config

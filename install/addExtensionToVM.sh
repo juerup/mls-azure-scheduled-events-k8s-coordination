@@ -11,9 +11,9 @@ az vm extension set \
   --vm-name $vmName \
   --resource-group $rgName \
   --settings '{ \
-    "fileUris": ["https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/blob/master/VmAgent/eventGridHelper.py", \
-                "https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/blob/master/VmAgent/scheduledEvents.config" \
-				"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/blob/master/VmAgent/scheduledEvents.py", \
-                "https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/blob/master/VmAgent/scheduledEventsHelper.py", \
-                "https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/blob/master/install/install.sh"], \
-     "commandToExecute":"bash install.sh $myEventTopic $myEventKey" }'
+    "fileUris": ["https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/eventGridHelper.py",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/scheduledEvents.config",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/scheduledEvents.py",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/scheduledEventsHelper.py",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/install/install.sh"],\
+"commandToExecute":"bash install.sh $myEventTopic $myEventKey" }'

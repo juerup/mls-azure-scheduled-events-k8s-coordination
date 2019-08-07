@@ -34,7 +34,7 @@ class EventGridMsgSender:
     def __init__(self, connectionString=None):
         if connectionString == None:
             config = configparser.ConfigParser()
-            config.read('scheduledEventsExtension.config')
+            config.read('scheduledEvents.config')
             self.topicKey = config.get(eventGridSection,'event_topic_key')
             if self.topicKey is None:
                 logger.error ("Failed to load Event Grid key. Make sure config file contains 'event_topic_key' entry")
