@@ -1,0 +1,15 @@
+[Unit]
+Description=scheduled events extension
+Requires=network.target
+After=rc-local.service
+[Service]
+WorkingDirectory=/srv/scheduledEvents/
+User=pseu2
+ExecStart=/usr/bin/python3 /srv/scheduledEvents/scheduledEvents.py
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+RestartSec=30
+[Install]
+WantedBy=multi-user.target
+Alias=scheduledEvents.service

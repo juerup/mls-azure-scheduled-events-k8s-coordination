@@ -4,7 +4,7 @@ import json
 import socket
 import sys, getopt
 import logging
-import time 
+import time
 import datetime
 import configparser
 from enum import Enum
@@ -21,11 +21,11 @@ eventGridSection= 'EVENT-GRID'
 
 def main():
     logger.debug ("Azure Scheduled Events Extension")
-    
+
     # load config file
-    try: 
+    try:
         config = configparser.ConfigParser()
-        config.read('scheduledEvents.config')
+        config.read('/srv/scheduledEvents/scheduledEvents.config')
     except:
         logger.error ("Failed to load configuration")
 
@@ -44,34 +44,45 @@ def main():
 
     isRunning = True
     egHelper = eventGridHelper.EventGridMsgSender()
-    
+
+    lastDocumentIncarnation = "0"
+
     while (isRunning):
-        try: 
+        try:
             eventData = seHelper.get_scheduled_events()
-        
+
             if eventData is None or len(eventData)==0 or len(eventData['Events']) == 0:
                 logger.debug ("No Scheduled Events")
 
             else:
                 localHost = seHelper.get_imds_local_host()
-                if seHelper.is_local_event (eventData,localHost):
-                    logger.debug ("handling an event on local host")
-                    seHelper.log_event(eventData)
-                    egHelper.send_to_evnt_grid(eventData, localHost)
-                    if autoAck:
-                        seHelper.ack_event(eventData,localHost)
+                if lastDocumentIncarnation != eventData['DocumentIncarnation']:
+                    lastDocumentIncarnation = eventData['DocumentIncarnation']
+                    if seHelper.is_local_event (eventData,localHost):
+                        logger.debug ("handling an event on local host")
+                        seHelper.log_event(eventData)
+                        egHelper.send_to_evnt_grid(eventData, localHost)
+                        if autoAck:
+                            seHelper.ack_event(eventData,localHost)
+                        else:
+                            logger.debug ("scheduled event was received without sending any ack")
                     else:
-                        logger.debug ("scheduled event was received without sending any ack")
+                        logger.debug ("handling an event from a different host")
                 else:
-                    logger.debug ("handling an event from a different host")                        
+                    logger.debug ("skipping an event already handled")
         except:
             logger.error ("failed to retrieve scheduled events ")
-            isRunning = False
-        if (isRunning): 
-            time.sleep(sampleFrequency)
+
+        time.sleep(sampleFrequency)
+
+
 
     logger.debug (": Azure Scheduled Events Extension - COMPLETED ")
 
 if __name__ == '__main__':
   main()
   sys.exit(0)
+
+
+
+

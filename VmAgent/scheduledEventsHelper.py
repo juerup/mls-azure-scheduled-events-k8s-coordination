@@ -30,44 +30,44 @@ class ScheduledEventsHelper:
 
     def get_scheduled_events(self):
         logger.debug ("get_scheduled_events was called")
-        try: 
+        try:
             req=Request(metadata_url)
-            req.add_header('Metadata','true')   
+            req.add_header('Metadata','true')
         except Exception:
             logger.debug ("get_scheduled_events: failed to set a request ")
-                    
-        try:                 
+
+        try:
             resp=urlopen(req)
-            scheduledEvent_data=json.loads(resp.read().decode('utf8'))            
+            scheduledEvent_data=json.loads(resp.read().decode('utf8'))
         except :
             logger.warn ("get_scheduled_events: failed to extract scheduled events . Are you running in AZURE? ")
-            return        
+            return
         return scheduledEvent_data
 
     def get_imds_local_host(self):
         logger.warn ("get_imds_local_host was called")
         # Call IMDS to identify the host name
-        try: 
+        try:
             imds_req=Request(imds_url)
-            imds_req.add_header('Metadata','true')                    
+            imds_req.add_header('Metadata','true')
         except Exception:
             logger.debug ("get_imds_local_host: failed to set a request ")
-                    
+
         try:
             imds_resp=urlopen(imds_req)
-            imds_data=json.loads(imds_resp.read().decode('utf8'))            
+            imds_data=json.loads(imds_resp.read().decode('utf8'))
         except:
             logger.warn ("get_imds_local_host: No instance metadata . Are you running an AZURE VM ? ")
-        
+
         logger.debug ("get_imds_local_host: IMDS hostname is "+imds_data["compute"]["name"])
         return imds_data["compute"]["name"]
 
     def is_local_event (self,evt,localHostName):
         logger.warn ("is_local_event was called")
-        
+
         isLocal = False
         for event in evt['Events']:
-            for resourceId in event['Resources']:            
+            for resourceId in event['Resources']:
                 logger.debug ("is_local_event: compare with resource in event: "+resourceId)
 
                 if localHostName in resourceId:
@@ -75,10 +75,10 @@ class ScheduledEventsHelper:
                     isLocal = True
 
         return isLocal
-        
+
     def ack_event(self,evt):
         for event in evt['Events']:
-            for resourceId in event['Resources']:            
+            for resourceId in event['Resources']:
                 if imds_data["compute"]["name"] in resourceId:
                     logger.info ("ack_event was called on local host with eventID "+ event['EventId'])
                     ack_msg="{\"StartRequests\":[{\"EventId\":\""+event['EventId'] +"\"}]}"
@@ -86,7 +86,7 @@ class ScheduledEventsHelper:
                     res=urlopen(metadata_url, data=ack_msg).read()
                     return True
         return False
-                
+
     def log_event (self,evt):
         logger.info ("log_event was called")
         if len(evt['Events']) == 0:
@@ -99,6 +99,7 @@ class ScheduledEventsHelper:
             eventype=event['EventType']
             restype=event['ResourceType']
             notbefore=event['NotBefore'].replace(" ","_")
-            isLocal = False            
+            isLocal = False
 
             logger.info ("EventId: "+ eventid+ " Type: "+ eventype+" Status: "+ status)
+
