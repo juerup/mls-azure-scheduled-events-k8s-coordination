@@ -1,7 +1,7 @@
-rgName='Stage-EU-MIP-RG'
-vmName='pseu'
+rgName='rems-intern'
+vmName='test'
 
-myEventTopic ='https://vm-scheduled-events.westeurope-1.eventgrid.azure.net/api/events'
+myEventTopic='https://vm-scheduled-events.westeurope-1.eventgrid.azure.net/api/events'
 myEventKey='fuweI6wEz9MW+gIyiXDNxajDbTVatv2dafGV67BPmMw='
 
 az vm extension set \
