@@ -1,5 +1,5 @@
-rgName='rems-intern'
-vmName='test'
+rgName='sdaf'
+vmName='tt2'
 
 myEventTopic='https://vm-scheduled-events.westeurope-1.eventgrid.azure.net/api/events'
 myEventKey='fuweI6wEz9MW+gIyiXDNxajDbTVatv2dafGV67BPmMw='
@@ -7,7 +7,7 @@ myEventKey='fuweI6wEz9MW+gIyiXDNxajDbTVatv2dafGV67BPmMw='
 az vm extension set \
   --publisher Microsoft.Azure.Extensions \
   --version 2.0 \
-  --name CustomScript \
+  --name ProcessScheduledEvents \
   --vm-name $vmName \
   --resource-group $rgName \
   --settings '{ \
