@@ -6,11 +6,6 @@
 #
 
 
-workserver_path=/srv/scheduledEvents
-mkdir $workserver_path
-cd $workserver_path
-pyvenv 
-
 #install necessary libraries
 apt-get install python3-pip libssl-dev libffi-dev python-dev build-essential -y
 pip3 install proxy.py
@@ -18,14 +13,19 @@ pip3 install azure-mgmt
 pip3 install azure-eventgrid
 pip3 install azure-mgmt-eventgrid
 
-#write Event Grid Topic and Key to config file from parameters
-sed -i "s@<myEventTopic>@$1@g" ./scheduledEvents.config
-sed -i "s@<myEventKey>@$2@g" ./scheduledEvents.config
+workserver_path=/srv/scheduledEvents
+mkdir $workserver_path
 
 cp scheduledEvents.py $workserver_path
 cp scheduledEvents.config $workserver_path
 cp eventGridHelper.py $workserver_path
 cp scheduledEventsHelper.py $workserver_path
+
+python3 -m venv /path/to/new/virtual/environment
+
+#write Event Grid Topic and Key to config file from parameters
+sed -i "s@<myEventTopic>@$1@g" $workserver_path/scheduledEvents.config
+sed -i "s@<myEventKey>@$2@g" $workserver_path/scheduledEvents.config
 
 # create a service
 touch /etc/systemd/system/scheduledEvents.service
