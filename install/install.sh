@@ -4,6 +4,13 @@
 #
 # usage: install.sh <myEventTopic> <myEventKey> 
 #
+
+
+workserver_path=/srv/scheduledEvents
+mkdir $workserver_path
+cd $workserver_path
+pyvenv 
+
 #install necessary libraries
 apt-get install python3-pip libssl-dev libffi-dev python-dev build-essential -y
 pip3 install proxy.py
@@ -15,8 +22,6 @@ pip3 install azure-mgmt-eventgrid
 sed -i "s@<myEventTopic>@$1@g" ./scheduledEvents.config
 sed -i "s@<myEventKey>@$2@g" ./scheduledEvents.config
 
-workserver_path=/srv/scheduledEvents
-mkdir $workserver_path
 cp scheduledEvents.py $workserver_path
 cp scheduledEvents.config $workserver_path
 cp eventGridHelper.py $workserver_path
