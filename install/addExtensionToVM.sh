@@ -1,5 +1,5 @@
 rgName='sdaf'
-vmName='tt2'
+vmName='linux'
 
 myEventTopic='https://vm-scheduled-events.westeurope-1.eventgrid.azure.net/api/events'
 myEventKey='fuweI6wEz9MW+gIyiXDNxajDbTVatv2dafGV67BPmMw='
