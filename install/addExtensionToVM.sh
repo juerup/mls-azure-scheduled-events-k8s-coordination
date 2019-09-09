@@ -7,7 +7,7 @@ myEventKey='fuweI6wEz9MW+gIyiXDNxajDbTVatv2dafGV67BPmMw='
 az vm extension set \
   --publisher Microsoft.Azure.Extensions \
   --version 2.0 \
-  --name ProcessScheduledEvents \
+  --name CustomScript \
   --vm-name $vmName \
   --resource-group $rgName \
   --settings '{ \
