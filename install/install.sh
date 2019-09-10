@@ -7,14 +7,18 @@
 
 
 #install necessary libraries
+workserver_path=/srv/scheduledEvents
+mkdir $workserver_path
+
+apt-get install python3-venv -y
+python3 -m venv $workserver_path
+
 apt-get install python3-pip libssl-dev libffi-dev python-dev build-essential -y
+
 pip3 install proxy.py
 pip3 install azure-mgmt
 pip3 install azure-eventgrid
 pip3 install azure-mgmt-eventgrid
-
-workserver_path=/srv/scheduledEvents
-mkdir $workserver_path
 
 cp scheduledEvents.py $workserver_path
 cp scheduledEvents.config $workserver_path
