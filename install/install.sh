@@ -36,8 +36,8 @@ touch /etc/systemd/system/scheduledEvents.service
 printf '[Unit]\nDescription=scheduled events extension\nRequires=network.target\nAfter=rc-local.service\n' >> /etc/systemd/system/scheduledEvents.service
 printf '[Service]\nWorkingDirectory=%s\n' $workserver_path >> /etc/systemd/system/scheduledEvents.service
 printf 'ExecStart=/usr/bin/python3 %s/scheduledEvents.py\n' $workserver_path >> /etc/systemd/system/scheduledEvents.service
-printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\nRestart=on-failure\n' >> /etc/systemd/system/scheduledEvents.service
-printf 'KillMode=process\nRestart=always\nRestartSec=30\n' >> /etc/systemd/system/scheduledEvents.service
+printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\n' >> /etc/systemd/system/scheduledEvents.service
+printf 'Restart=always\nRestartSec=30\n' >> /etc/systemd/system/scheduledEvents.service
 printf '[Install]\nWantedBy=multi-user.target\nAlias=scheduledEvents.service' >> /etc/systemd/system/scheduledEvents.service
 chmod +x /etc/systemd/system/scheduledEvents.service
 
