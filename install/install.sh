@@ -38,8 +38,9 @@ printf '[Service]\nWorkingDirectory=%s\n' $workserver_path >> /etc/systemd/syste
 printf 'ExecStart=/usr/bin/python3 %s/scheduledEvents.py\n' $workserver_path >> /etc/systemd/system/scheduledEvents.service
 printf 'ExecReload=/bin/kill -HUP $MAINPID\nKillMode=process\n' >> /etc/systemd/system/scheduledEvents.service
 printf 'Restart=always\nRestartSec=30\n' >> /etc/systemd/system/scheduledEvents.service
-printf '[Install]\nWantedBy=multi-user.target\nAlias=scheduledEvents.service' >> /etc/systemd/system/scheduledEvents.service
+printf '[Install]\nWantedBy=multi-user.target\n' >> /etc/systemd/system/scheduledEvents.service
 chmod +x /etc/systemd/system/scheduledEvents.service
 
-# start the  service
-service scheduledEvents start
+# start and enable the  service
+systemctl enable scheduledEvents
+systemctl start scheduledEvents
