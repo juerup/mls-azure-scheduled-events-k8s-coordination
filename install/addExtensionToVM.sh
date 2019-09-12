@@ -17,3 +17,21 @@ az vm extension set \
 "https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/scheduledEventsHelper.py",\
 "https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/install/install.sh"],\
 "commandToExecute":"bash install.sh $myEventTopic $myEventKey" }'
+
+
+-- scaleset
+
+az vmss extension set \
+  --publisher Microsoft.Azure.Extensions \
+  --version 2.0 \
+  --name azureScheduledEventsMonitoring \
+  --type CustomScript \
+  --vmss-name $vmName \
+  --resource-group $rgName \
+  --settings '{ \
+    "fileUris": ["https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/eventGridHelper.py",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/scheduledEvents.config",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/scheduledEvents.py",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/VmAgent/scheduledEventsHelper.py",\
+"https://github.com/juerup/mls-azure-scheduled-events-k8s-coordination/raw/master/install/install.sh"],\
+"commandToExecute":"bash install.sh $myEventTopic $myEventKey" }'
